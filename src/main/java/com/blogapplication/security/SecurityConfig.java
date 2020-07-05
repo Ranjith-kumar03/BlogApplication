@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.blogapplication.repository.UserRepository;
 
@@ -22,6 +23,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private UserDetailsService userdetailservice;
+	@Bean
+	public com.blogapplication.securityJWT.JwtAuthenticationFilter JwtAuthenticationFilter()
+	{
+		return new com.blogapplication.securityJWT.JwtAuthenticationFilter();
+	}
 	
 	@Bean(BeanIds.AUTHENTICATION_MANAGER)
 	@Override
@@ -39,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.anyRequest()
 				.authenticated();
+	http.addFilterBefore(JwtAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class);
 	}
 	
 	@Autowired
@@ -50,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 
 	@Bean
