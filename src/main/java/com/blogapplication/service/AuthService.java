@@ -52,11 +52,12 @@ public class AuthService {
 	}
 	
 	
-	public String login(@RequestBody  LoginRequest loginRequest)
+	public AuthenticationResponse login(@RequestBody  LoginRequest loginRequest)
 	{
 		Authentication authentication=   authetnticationmanager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 	    SecurityContextHolder.getContext().setAuthentication(authentication);
-	   return jwt.generateToken(authentication);
+	    String token = jwt.generateToken(authentication);
+	   return new AuthenticationResponse(token ,loginRequest.getUsername());
 	}
 	
     public Optional<org.springframework.security.core.userdetails.User> getCurrentUser()
